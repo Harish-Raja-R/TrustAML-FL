@@ -1,0 +1,29 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Node
+node_modules/
+dist/
+.DS_Store
+
+# Data and Results
+data/synthetic/*
+results/metrics/*
+results/figures/*
+!data/synthetic/.gitkeep
+!results/metrics/.gitkeep
+!results/figures/.gitkeep
+
+# IDE
+.idea/
+.vscode/
+*.swp
