@@ -1,0 +1,10 @@
+| Experiment            | Aggregation   |   Malicious_% |   PR-AUC |     F1 |
+|:----------------------|:--------------|--------------:|---------:|-------:|
+| FedAvg_Clean          | FedAvg        |             0 |   0.9835 | 0.7345 |
+| FedAvg_10pct_Attacked | FedAvg        |            10 |   0.9137 | 0.2313 |
+| FedAvg_20pct_Attacked | FedAvg        |            20 |   0.8656 | 0.3299 |
+| FedAvg_30pct_Attacked | FedAvg        |            30 |   0.2104 | 0.1818 |
+| Median_Clean          | Median        |             0 |   0.8793 | 0.622  |
+| Median_10pct_Attacked | Median        |            10 |   0.9492 | 0.6311 |
+| Median_20pct_Attacked | Median        |            20 |   0.9153 | 0.4924 |
+| Median_30pct_Attacked | Median        |            30 |   0.8826 | 0.501  |

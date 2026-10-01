@@ -1,0 +1,20 @@
+{
+    "FP": {
+        "transaction_id": "TXN_f14925b6",
+        "risk_score": 0.6151354312896729,
+        "risk_level": "MEDIUM",
+        "reasons": [
+            "Elevated risk score from ML model."
+        ],
+        "pattern": "normal"
+    },
+    "TP": {
+        "transaction_id": "AML_9a4a8c82",
+        "risk_score": 0.5992497801780701,
+        "risk_level": "MEDIUM",
+        "reasons": [
+            "Suspicious topological pattern detected: fan_out."
+        ],
+        "pattern": "fan_out"
+    }
+}

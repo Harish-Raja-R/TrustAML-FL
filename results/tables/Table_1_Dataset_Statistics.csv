@@ -1,0 +1,11 @@
+Statistic,Value
+Total Transactions,2141
+Total Accounts,1991
+Unique Devices,1323
+Unique Locations,878
+AML Transactions,641
+AML Rate (%),29.94
+Number of Banks,3
+Date Range,2023-01-01 00:05:00 to 2023-12-31 20:47:00
+Mean Amount,19003.31
+Median Amount,126.36

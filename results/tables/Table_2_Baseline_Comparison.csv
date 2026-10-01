@@ -1,0 +1,5 @@
+Method,PR-AUC,ROC-AUC,Precision,Recall,F1,MCC
+Centralized,0.0,0.0,0.0,0.0,0.0,0.0
+FedAvg,0.0,0.0,0.0,0.0,0.0,0.0
+FedProx,0.0,0.0,0.0,0.0,0.0,0.0
+Local,0.0,0.0,0.0,0.0,0.0,0.0

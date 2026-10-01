@@ -73,10 +73,44 @@ class GraphBuilder:
         data['transaction'].y = torch.tensor(tx_labels, dtype=torch.long)
         data['transaction'].timestamp = torch.tensor(tx_times, dtype=torch.float)
         
-        # Give dummy features to other nodes for simplicity, or we can use structural features
-        data['account'].x = torch.ones((len(accounts), 1), dtype=torch.float)
-        data['device'].x = torch.ones((len(devices), 1), dtype=torch.float)
-        data['location'].x = torch.ones((len(locations), 1), dtype=torch.float)
+        # Statistically realistic node features computed ONLY from the given temporal window (self.tx_df)
+        # Avoids target leakage by restricting calculations to the visible graph.
+        
+        # 1. Account Features: [transaction_count, inbound_count, outbound_count, total_inbound_amount, total_outbound_amount]
+        account_features = []
+        # Precompute aggregations
+        outbound_stats = self.tx_df.groupby('sender_account')['amount'].agg(['count', 'sum']).fillna(0)
+        inbound_stats = self.tx_df.groupby('receiver_account')['amount'].agg(['count', 'sum']).fillna(0)
+        
+        for acc in accounts:
+            out_count = outbound_stats.at[acc, 'count'] if acc in outbound_stats.index else 0
+            out_sum = outbound_stats.at[acc, 'sum'] if acc in outbound_stats.index else 0
+            in_count = inbound_stats.at[acc, 'count'] if acc in inbound_stats.index else 0
+            in_sum = inbound_stats.at[acc, 'sum'] if acc in inbound_stats.index else 0
+            total_count = out_count + in_count
+            account_features.append([total_count, in_count, out_count, in_sum, out_sum])
+            
+        data['account'].x = torch.tensor(account_features, dtype=torch.float)
+        
+        # 2. Device Features: [transaction_count, total_amount]
+        device_features = []
+        dev_stats = self.tx_df.groupby('device')['amount'].agg(['count', 'sum']).fillna(0)
+        for dev in devices:
+            count = dev_stats.at[dev, 'count'] if dev in dev_stats.index else 0
+            tsum = dev_stats.at[dev, 'sum'] if dev in dev_stats.index else 0
+            device_features.append([count, tsum])
+            
+        data['device'].x = torch.tensor(device_features, dtype=torch.float)
+        
+        # 3. Location Features: [transaction_count, total_amount]
+        location_features = []
+        loc_stats = self.tx_df.groupby('location')['amount'].agg(['count', 'sum']).fillna(0)
+        for loc in locations:
+            count = loc_stats.at[loc, 'count'] if loc in loc_stats.index else 0
+            tsum = loc_stats.at[loc, 'sum'] if loc in loc_stats.index else 0
+            location_features.append([count, tsum])
+            
+        data['location'].x = torch.tensor(location_features, dtype=torch.float)
         
         # Add edges
         # account -> SENDS -> transaction

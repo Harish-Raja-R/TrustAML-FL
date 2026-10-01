@@ -1,0 +1,20 @@
+| Degree   |   Seed | Method   |   PR-AUC |   ROC-AUC |
+|:---------|-------:|:---------|---------:|----------:|
+| iid      |     42 | FedAvg   | 0.87561  |  0.880904 |
+| iid      |     42 | FedProx  | 0.86605  |  0.866356 |
+| iid      |    123 | FedAvg   | 0.829256 |  0.799679 |
+| iid      |    123 | FedProx  | 0.818779 |  0.771453 |
+| iid      |    456 | FedAvg   | 0.80075  |  0.735831 |
+| iid      |    456 | FedProx  | 0.794031 |  0.732512 |
+| moderate |     42 | FedAvg   | 0.54687  |  0.772735 |
+| moderate |     42 | FedProx  | 0.451022 |  0.691462 |
+| moderate |    123 | FedAvg   | 0.605533 |  0.732737 |
+| moderate |    123 | FedProx  | 0.268315 |  0.487862 |
+| moderate |    456 | FedAvg   | 0.539001 |  0.713183 |
+| moderate |    456 | FedProx  | 0.724519 |  0.91156  |
+| severe   |     42 | FedAvg   | 0        |  0        |
+| severe   |     42 | FedProx  | 0        |  0        |
+| severe   |    123 | FedAvg   | 0        |  0        |
+| severe   |    123 | FedProx  | 0        |  0        |
+| severe   |    456 | FedAvg   | 0        |  0        |
+| severe   |    456 | FedProx  | 0        |  0        |
