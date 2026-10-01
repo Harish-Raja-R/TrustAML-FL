@@ -21,7 +21,8 @@ def run_all():
         "experiments/run_fedprox.py",
         "experiments/run_privacy.py",
         "experiments/run_robustness.py",
-        "experiments/run_drift.py"
+        "experiments/run_drift.py",
+        "experiments/generate_tables.py"
     ]
     
     for script in scripts:

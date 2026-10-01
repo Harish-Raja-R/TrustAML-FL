@@ -13,9 +13,9 @@ app.add_middleware(
 )
 
 app.include_router(system.router, prefix="/api/system", tags=["System"])
-# app.include_router(experiments.router, prefix="/api/experiments", tags=["Experiments"])
-# app.include_router(alerts.router, prefix="/api/alerts", tags=["Alerts"])
-# app.include_router(models.router, prefix="/api/models", tags=["Models"])
+app.include_router(experiments.router, prefix="/api/experiments", tags=["Experiments"])
+app.include_router(alerts.router, prefix="/api/alerts", tags=["Alerts"])
+app.include_router(models.router, prefix="/api/models", tags=["Models"])
 
 @app.get("/")
 def root():

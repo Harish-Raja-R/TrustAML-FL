@@ -4,13 +4,25 @@ import os
 
 router = APIRouter()
 
+def read_json_safe(filepath):
+    if not os.path.exists(filepath):
+        return None
+    try:
+        with open(filepath, "r") as file:
+            return json.load(file)
+    except Exception:
+        return None
+
 @router.get("/")
 def list_experiments():
-    results = {}
     metrics_dir = "results/metrics"
-    if os.path.exists(metrics_dir):
-        for f in os.listdir(metrics_dir):
-            if f.endswith(".json"):
-                with open(os.path.join(metrics_dir, f), "r") as file:
-                    results[f.split(".")[0]] = json.load(file)
-    return results
+    
+    return {
+        "centralized": read_json_safe(os.path.join(metrics_dir, "centralized.json")),
+        "local": read_json_safe(os.path.join(metrics_dir, "local.json")),
+        "fedavg": read_json_safe(os.path.join(metrics_dir, "fedavg.json")),
+        "fedprox": read_json_safe(os.path.join(metrics_dir, "fedprox.json")),
+        "privacy": read_json_safe(os.path.join(metrics_dir, "privacy.json")),
+        "robustness": read_json_safe(os.path.join(metrics_dir, "robustness.json")),
+        "drift": read_json_safe(os.path.join(metrics_dir, "drift.json"))
+    }

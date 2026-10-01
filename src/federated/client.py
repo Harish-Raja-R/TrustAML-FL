@@ -30,7 +30,16 @@ class FLClient:
         self.global_model.load_state_dict(copy.deepcopy(global_params))
         
     def get_parameters(self):
-        return self.model.state_dict()
+        # Return parameter DELTAS instead of absolute weights
+        delta_dict = {}
+        for key in self.model.state_dict().keys():
+            local_param = self.model.state_dict()[key]
+            global_param = self.global_model.state_dict()[key]
+            if local_param.dtype in [torch.float16, torch.float32, torch.float64]:
+                delta_dict[key] = local_param - global_param
+            else:
+                delta_dict[key] = local_param.clone()
+        return delta_dict
         
     def get_num_samples(self):
         return self.train_mask.sum().item()

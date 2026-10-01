@@ -18,24 +18,13 @@ class DPFLClient(FLClient):
         self.noise_multiplier = noise_multiplier
         
     def get_parameters(self):
-        # Calculate pseudo-gradient (difference between initial and final weights)
-        pseudo_grad = {}
-        for key in self.model.state_dict().keys():
-            if self.model.state_dict()[key].dtype in [torch.float16, torch.float32, torch.float64]:
-                pseudo_grad[key] = self.model.state_dict()[key] - self.global_model.state_dict()[key]
-                
-        # Clip and add noise to pseudo-gradient
-        dp_grad = clip_and_add_noise(pseudo_grad, self.clip_norm, self.noise_multiplier)
+        # get_parameters from base class now returns deltas
+        deltas = super().get_parameters()
         
-        # Apply DP gradient back to global weights
-        dp_params = {}
-        for key in self.model.state_dict().keys():
-            if key in dp_grad:
-                dp_params[key] = self.global_model.state_dict()[key] + dp_grad[key]
-            else:
-                dp_params[key] = self.model.state_dict()[key]
-                
-        return dp_params
+        # Clip and add noise to deltas
+        dp_deltas = clip_and_add_noise(deltas, self.clip_norm, self.noise_multiplier)
+        
+        return dp_deltas
 
 def run_privacy():
     if not PYG_AVAILABLE:
@@ -57,6 +46,8 @@ def run_privacy():
     
     results = {}
     
+    from src.privacy.accounting import compute_dp_epsilon
+    
     for dp_name, config in dp_configs.items():
         print(f"\n--- Running DP Experiment: {dp_name} ---")
         global_model = create_hetero_graphsage(metadata, hidden_channels=32, out_channels=1, num_layers=2)
@@ -73,7 +64,19 @@ def run_privacy():
             
         server = FLServer(global_model, clients, rounds=15)
         history = server.fit()
-        results[dp_name] = history
+        
+        # Privacy accounting
+        acc = compute_dp_epsilon(
+            epochs=15*2, 
+            sample_rate=1.0, 
+            noise_multiplier=config["noise_multiplier"], 
+            delta=1e-5
+        )
+        
+        results[dp_name] = {
+            "metrics": history,
+            "privacy_status": acc
+        }
     
     os.makedirs("results/metrics", exist_ok=True)
     with open("results/metrics/privacy.json", "w") as f:
